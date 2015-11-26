@@ -3,12 +3,13 @@ import datetime
 
 # Create your models here.
 class Users(models.Model):
-    name = models.CharField(blank=False, max_length=50)
-    email = models.EmailField(blank=False)
-    referral_code = models.CharField(blank=True, max_length=10, unique=True)
-    referred_by = models.IntegerField(blank=True)
+    name = models.CharField(null=False, max_length=50)
+    email = models.EmailField(null=False)
+    referral_code = models.CharField(null=True, blank=True, max_length=10, unique=True)
+    referred_by = models.IntegerField(blank=True, null=True)
+    referred_by_code = models.CharField(null=True, blank=True, max_length=10)
     referral_score = models.IntegerField(default=0)
-    wallet = models.FloatField(blank=True)
+    wallet = models.FloatField(blank=True, null=True)
 
     def __unicode__(self):
         return '%s' % (self.name)
@@ -19,7 +20,7 @@ class Users(models.Model):
 
 
 class Coupons(models.Model):
-    coupon_code = models.CharField(blank=False, max_length=10)
+    coupon_code = models.CharField(blank=True, null=False, max_length=10)
     valid_till = models.DateField()
 
     class Meta:
