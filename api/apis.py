@@ -134,3 +134,21 @@ def check_referral_code(request):
             response["user"] = {}
             return HttpResponse(json.dumps(response), content_type='application/json', status=400)
 
+@csrf_exempt
+def get_user(request,id):
+    if request.method == 'GET':
+        response = {}
+        try:
+            curr_user = Users.objects.get(pk=int(id))
+            response["user"] = curr_user.as_json()
+            if curr_user.referred_by is not None:
+                referral_user = Users.objects.get(pk=int(curr_user.referred_by))
+                response["user"]["referred_by"] = str(referral_user.name)
+            return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+        except:
+            response["message"] = "Invalid user id"
+            response["user"] = {}
+            return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+
+
+

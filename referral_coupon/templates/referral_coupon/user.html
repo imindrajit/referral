@@ -14,10 +14,15 @@
     <script type="text/javascript" src="/static/js/services/referralServices.js"></script>
     <title>Add User</title>
 </head>
-<h1>Enter User Details</h1>
+<h1>User Details</h1>
 <body data-ng-app="app">
-    <div ng-controller="referralController" data-ng-init="getUserData({{ id }})">
-
+    <div ng-controller="referralController" data-ng-init="getUserData({{ id }})" style="margin-top: 50px;">
+        <p>Name &nbsp; : &nbsp; [[ user_data.name ]]</p>
+        <p>Email &nbsp; : &nbsp; [[ user_data.email ]]</p>
+        <p>Referral Code &nbsp; : &nbsp; [[ user_data.referral_code ]]</p>
+        <p>Referred By&nbsp; : &nbsp; [[ user_data.referred_by ]]</p>
+        <p>Referral Score &nbsp; : &nbsp; [[ user_data.referral_score ]]</p>
+        <p>Wallet Money &nbsp; : &nbsp; [[ user_data.wallet ]]</p>
     </div>
 </body>
 </html>

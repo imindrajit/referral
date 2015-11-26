@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     # url(r'^generate-coupon/', views.generate_coupon, name='generate_coupon'),
     # url(r'^redeem-coupon/', views.redeem_coupon, name='redeem_coupon'),
     url(r'^api/v1/user/$', apis.user, name='user'),
+    url(r'^api/v1/user/(?P<id>\d+)/?$', apis.get_user, name='get_user'),
     url(r'^api/v1/check-email/$', apis.check_email, name='check_email'),
     url(r'^api/v1/check-referral-code/$', apis.check_referral_code, name='check_referral_code')
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
