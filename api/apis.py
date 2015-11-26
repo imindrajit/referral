@@ -136,6 +136,75 @@ def generate_referral_code(request):
             return HttpResponse(json.dumps(response), content_type='application/json', status=400)
 
 @csrf_exempt
+def generate_coupon_code(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print body
+        response = {}
+        try:
+            val = body["value"].isdigit()
+            use_limit = body["use_limit"].isdigit()
+            if val and use_limit and int(body["use_limit"]) > 0:
+                curr_coupon = Coupons()
+                curr_coupon.generate_coupon_code(int(body["value"]), int(body["use_limit"]))
+                response["message"] = "Coupon Code generated"
+                response["coupon"] = curr_coupon.as_json()
+                return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+            else:
+                response["message"] = "Enter valid coupon value or coupon use limit"
+                return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+        except:
+            response["message"] = "Enter valid coupon value or coupon use limit"
+            return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+
+def add_money_to_wallet(curr_user, coupon):
+    curr_user.wallet = curr_user.wallet + coupon.value
+    curr_user.save()
+    return
+
+@csrf_exempt
+def redeem_code(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print body
+        response = {}
+        try:
+            curr_user = Users.objects.get(email=str(body["email"]))
+            # print curr_user.as_json()
+            coupon = Coupons.objects.get(coupon_code=str(body["code"]))
+            # print coupon.as_json()
+            try:
+                curr_used_coupon = UsedCoupons.objects.get(user=curr_user, coupon=coupon)
+                print "curr used coupon"
+                print curr_used_coupon
+                print "ye banda pehle coupon use kiya hai"
+                if curr_used_coupon.used_count == 0:
+                    response["message"] = "Coupon usage limit exceeded"
+                    return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+                else:
+                    curr_used_coupon.used_count = curr_used_coupon.used_count - 1
+                    curr_used_coupon.save()
+                    add_money_to_wallet(curr_user, coupon)
+                    response["message"] = "Coupon amount added to wallet"
+                    return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+            except:
+                print "naya banda hai"
+                curr_used_coupon = UsedCoupons()
+                curr_used_coupon.user = curr_user
+                curr_used_coupon.coupon = coupon
+                curr_used_coupon.used_count = coupon.use_limit - 1
+                curr_used_coupon.save()
+                add_money_to_wallet(curr_user, coupon)
+                response["message"] = "Coupon amount added to wallet"
+                return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+        except:
+            response["message"] = "Enter valid email address or coupon code"
+            return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+
+
+@csrf_exempt
 def check_referral_code(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')

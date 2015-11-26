@@ -19,3 +19,11 @@ def generate_referral_code(request):
 def all_users(request):
     context = RequestContext(request)
     return render_to_response('referral_coupon/all_users.html', {}, context)
+
+def generate_coupon(request):
+    context = RequestContext(request)
+    return render_to_response('referral_coupon/generate_coupon.html', {}, context)
+
+def redeem_coupon(request):
+    context = RequestContext(request)
+    return render_to_response('referral_coupon/redeem_coupon.html', {}, context)

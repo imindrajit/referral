@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/angular.min.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
+    <script type="text/javascript" src="/static/js/controllers/couponController.js"></script>
+    <script type="text/javascript" src="/static/js/services/couponServices.js"></script>
+    <title>Generate Coupons</title>
+</head>
+<h1>Generate Coupons</h1>
+<a href="/home/">Home</a>
+<body data-ng-app="app">
+    <div ng-controller="couponController" style="margin-top: 50px;">
+        <div class="error" ng-show="showError" style="margin-left: 100px;">
+            <p style="color: red;">[[ errorMessage ]]</p>
+        </div>
+        <form id="coupon_form">
+
+            <label for="value" ng-show="!showSuccessMessage">Value</label>
+            <input id="value" style="margin-left: 61px;" type="text" ng-show="!showSuccessMessage" name="coupon_value" ng-model="coupon.value" required><br>
+            <label for="use_limit" ng-show="!showSuccessMessage">Use Limit</label>
+            <input id="use_limit" style="margin-left: 35px;" type="text" ng-show="!showSuccessMessage" name="coupon_use_limit" ng-model="coupon.use_limit" required><br>
+            <label for="coupon_code" ng-show="showSuccessMessage">Coupon Code</label>
+            <input id="coupon_code" ng-show="showSuccessMessage" style="margin-left: 5px;" type="text" name="coupon_code" ng-model="coupon.code" readonly><br>
+
+            <div style="margin-top: 20px;margin-left: 95px;">
+                <input type="button" ng-click="generateCouponCode()" value="Generate Coupon Code">
+            </div>
+        </form>
+        <div ng-show="showSuccessMessage" style="margin-top: 40px;margin-left: 100px; color: green;">
+            <p>Coupon Code generated</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -54,6 +54,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 DOMAIN = "http://127.0.0.1:8000"
+LIMIT = 4
 
 ROOT_URLCONF = 'referral.urls'
 
