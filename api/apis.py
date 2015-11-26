@@ -44,11 +44,13 @@ def verify_referral_code(code):
     # print response.read()
     return response.read()
 
-def increment_referral_scores(code):
-    users = Users.objects.filter(Q(referral_code=str(code)) | Q(referred_by_code=str(code)))
-    for each_user in users:
-        each_user.referral_score = each_user.referral_score + 1
-        each_user.save()
+def increment_referral_scores(new_user):
+    new_user.referral_score = new_user.referral_score + 1
+    new_user.save()
+    if new_user.referred_by is None:
+        return
+    parent_user = Users.objects.get(pk=new_user.referred_by)
+    increment_referral_scores(parent_user)
 
 
 @csrf_exempt
@@ -86,17 +88,17 @@ def user(request):
         else:
             pass
 
-        newUser = Users()
-        newUser.name = body["name"]
-        newUser.email = body["email"]
+        new_user = Users()
+        new_user.name = body["name"]
+        new_user.email = body["email"]
         if referred_by_user:
-            newUser.referred_by = int(referred_by_user["id"])
-            newUser.referred_by_code = referred_by_user["referral_code"]
-        newUser.save()
+            new_user.referred_by = int(referred_by_user["id"])
+            new_user.referred_by_code = referred_by_user["referral_code"]
+        new_user.save()
         if referred_by_user:
-            increment_referral_scores(referred_by_user["referral_code"])
+            increment_referral_scores(new_user)
         response['message'] = "User successfully added"
-        response['user'] = newUser.as_json()
+        response['user'] = new_user.as_json()
         return HttpResponse(json.dumps(response), content_type='application/json', status=200)
 
 @csrf_exempt
@@ -112,6 +114,26 @@ def check_email(request):
         except:
             response["message"] = "New Email."
             return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+
+@csrf_exempt
+def generate_referral_code(request):
+    if request.method == 'POST':
+        print "code banao"
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print body
+        response = {}
+        try:
+            curr_user = Users.objects.get(email=str(body["email"]))
+            print "yahi wala user hai"
+            print curr_user.as_json()
+            curr_user.generate_referral_code()
+            response["message"] = "Referral Code generated"
+            response["user"] = curr_user.as_json()
+            return HttpResponse(json.dumps(response), content_type='application/json', status=200)
+        except:
+            response["message"] = "Enter valid email address"
+            return HttpResponse(json.dumps(response), content_type='application/json', status=400)
 
 @csrf_exempt
 def check_referral_code(request):
@@ -149,6 +171,18 @@ def get_user(request,id):
             response["message"] = "Invalid user id"
             response["user"] = {}
             return HttpResponse(json.dumps(response), content_type='application/json', status=400)
+
+@csrf_exempt
+def all_users(request):
+    if request.method == 'GET':
+        response = {}
+        all_users_array = []
+        all_users_data = Users.objects.all().order_by("-referral_score")
+        for each_user in all_users_data:
+            all_users_array.append(each_user.as_json())
+
+        response["users"] = all_users_array
+        return HttpResponse(json.dumps(response), content_type='application/json', status=200)
 
 
 

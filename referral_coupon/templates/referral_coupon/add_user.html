@@ -18,6 +18,7 @@
 <body data-ng-app="app">
     <div ng-controller="referralController" class="content" style="margin-top: 40px;">
         <h1 ng-show="!showSuccessMessage">Enter User Details</h1>
+        <a href="/home/">Home</a>
         <div class="error" ng-show="showError">
             <p style="color: red;">[[ errorMessage ]]</p>
         </div>
@@ -38,6 +39,7 @@
             <p>User successfully registered</p>
             <div>
                 <a href="[[ userLink ]]">User</a>
+                <a href="/home/">Home</a>
             </div>
         </div>
     </div>

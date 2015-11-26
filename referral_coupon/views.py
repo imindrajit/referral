@@ -11,3 +11,11 @@ def user(request, id):
 def add_user(request):
     context = RequestContext(request)
     return render_to_response('referral_coupon/add_user.html', {} , context)
+
+def generate_referral_code(request):
+    context = RequestContext(request)
+    return render_to_response('referral_coupon/generate_referral_code.html', {}, context)
+
+def all_users(request):
+    context = RequestContext(request)
+    return render_to_response('referral_coupon/all_users.html', {}, context)

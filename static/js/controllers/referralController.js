@@ -9,6 +9,11 @@ app.controller("referralController", function($scope,referralAPIService){
             'referred_by_code': ""
         };
 
+        $scope.rcodeUser = {
+            'email': "",
+            'referral_code': ""
+        };
+
         $scope.saveUser = function() {
             var saveUserApiCall = referralAPIService.saveUser($scope.newUser);
             saveUserApiCall.success(function(data,status){
@@ -40,19 +45,46 @@ app.controller("referralController", function($scope,referralAPIService){
                     "referral_score": user_data["referral_score"],
                     "wallet": user_data["wallet"]
                 };
-                if(data["referral_code"] == null)
+                if(data["referral_code"] === null)
                 {
                     $scope.user_data["referral_code"] = "";
                 }else{
                     $scope.user_data["referral_code"] = user_data["referral_code"];
                 }
-                if(data["referred_by"] == null)
+                if(data["referred_by"] === null)
                 {
                     $scope.user_data["referred_by"] = "";
                 }else{
-                    $scope.user_data["referred_by"] = user_data["referred_by"];
+                    $scope.user_data["referred_by"]  = user_data["referred_by"];
                 }
             });
-        }
+        };
+
+        $scope.generateReferralCode = function(){
+            console.log($scope.rcodeUser);
+            var generateCode = referralAPIService.generateReferralCode($scope.rcodeUser);
+            generateCode.success(function (data,status) {
+                $scope.showError = 0;
+                console.log(status);
+                console.log(data);
+                $scope.showSuccessMessage = 1;
+                $scope.rcodeUser["email"] = data["user"]["email"];
+                $scope.rcodeUser["referral_code"] = data["user"]["referral_code"];
+            });
+            generateCode.error(function (data,status) {
+                $scope.showError = 1;
+                $scope.showSuccessMessage = 0;
+                $scope.errorMessage = data["message"];
+                console.log(status);
+                console.log(data);
+            });
+        };
+
+        $scope.getAllUsers = function(){
+            referralAPIService.getAllUsers().success(function(data){
+                $scope.allUsers = data["users"];
+                console.log($scope.allUsers);
+            });
+        };
     }
 );

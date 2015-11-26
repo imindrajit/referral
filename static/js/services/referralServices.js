@@ -10,5 +10,13 @@ app.factory("referralAPIService", function ($http) {
         return $http.get('/api/v1/user/' + id);
     };
 
+    referralAPI.generateReferralCode = function (rcodeUser) {
+        return $http.post('/api/v1/user/generate-referral-code/', rcodeUser);
+    };
+
+    referralAPI.getAllUsers = function() {
+        return $http.get('/api/v1/users/');
+    };
+
     return referralAPI;
 });

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 import datetime
 
 # Create your models here.
@@ -21,6 +22,15 @@ class Users(models.Model):
             referral_by_code=self.referred_by_code,
             referral_score=self.referral_score,
             wallet=self.wallet)
+
+    def generate_referral_code(self):
+        if self.referral_code is not None:
+            print "code already hai"
+            return
+        else:
+            code = get_random_string(length=5)
+            self.referral_code = str(self.pk) + code
+            self.save()
 
     def __unicode__(self):
         return '%s' % (self.name)
