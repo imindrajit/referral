@@ -14,10 +14,14 @@
     <script type="text/javascript" src="/static/js/services/referralServices.js"></script>
     <title>Add User</title>
 </head>
-<h1>Enter User Details</h1>
+
 <body data-ng-app="app">
     <div ng-controller="referralController" class="content" style="margin-top: 40px;">
-        <form id="user_form">
+        <h1 ng-show="!showSuccessMessage">Enter User Details</h1>
+        <div class="error" ng-show="showError">
+            <p style="color: red;">[[ errorMessage ]]</p>
+        </div>
+        <form id="user_form" ng-show="!showSuccessMessage">
 
             <label for="name">Name</label>
             <input id="name" style="margin-left: 59px;" type="text" name="user_name" ng-model="newUser.name" required><br>
@@ -30,6 +34,12 @@
                 <input type="button" ng-click="saveUser()" value="Save User">
             </div>
         </form>
+        <div ng-show="showSuccessMessage">
+            <p>User successfully registered</p>
+            <div>
+                <a href="[[ userLink ]]">User</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -9,7 +9,18 @@ class Users(models.Model):
     referred_by = models.IntegerField(blank=True, null=True)
     referred_by_code = models.CharField(null=True, blank=True, max_length=10)
     referral_score = models.IntegerField(default=0)
-    wallet = models.FloatField(blank=True, null=True)
+    wallet = models.FloatField(null=True, blank=True, default=0.00)
+
+    def as_json(self):
+        return dict(
+            id=self.pk,
+            name=self.name,
+            email=self.email,
+            referral_code=self.referral_code,
+            referred_by=self.referred_by,
+            referral_by_code=self.referred_by_code,
+            referral_score=self.referral_score,
+            wallet=self.wallet)
 
     def __unicode__(self):
         return '%s' % (self.name)
@@ -22,6 +33,12 @@ class Users(models.Model):
 class Coupons(models.Model):
     coupon_code = models.CharField(blank=True, null=False, max_length=10)
     valid_till = models.DateField()
+
+    def as_json(self):
+        return dict(
+            id=self.pk,
+            coupon_code=self.coupon_code,
+            valid_till = self.valid_till.isoformat())
 
     class Meta:
         ordering = ['-valid_till']

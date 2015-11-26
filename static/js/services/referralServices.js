@@ -6,5 +6,9 @@ app.factory("referralAPIService", function ($http) {
         return $http.post('/api/v1/user/', user);
     };
 
+    referralAPI.getUser = function (id) {
+        return $http.get('/api/v1/user/' + id);
+    };
+
     return referralAPI;
 });
