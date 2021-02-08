@@ -5,7 +5,7 @@ bonjour-py==0.3
 Django==1.7
 Flask==0.10.1
 google-api-python-client==1.4.1
-httplib2==0.9.1
+httplib2==0.19.0
 iso8601==0.1.10
 itsdangerous==0.24
 Jinja2==2.7.3
