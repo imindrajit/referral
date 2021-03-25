@@ -59,7 +59,7 @@ pyOpenSSL==0.13.1
 pyparsing==2.0.1
 python-dateutil==1.5
 pytz==2015.2
-PyYAML==3.11
+PyYAML==5.4
 rsa==3.2
 scipy==0.13.0b1
 simplejson==3.8.0
